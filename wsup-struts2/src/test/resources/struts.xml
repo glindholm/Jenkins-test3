@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<bean type="com.opensymphony.xwork2.ObjectFactory" name="wsupGuiceObjectFactory"
+		class="net.sourceforge.wsup.struts2.guice.WsupGuiceObjectFactory" />
+	<constant name="struts.objectFactory" value="wsupGuiceObjectFactory" />
+	<constant name="wsup.guice.module" value="net.sourceforge.wsup.struts2.guice.TestModule" />
+
+	<package name="struts2-testing" extends="struts-default" namespace="/struts2-testing">
+		<result-types>
+			<result-type name="httperror" class="net.sourceforge.wsup.struts2.result.HttpError" />
+		</result-types>
+
+		<interceptors>
+			<interceptor name="log"
+				class="net.sourceforge.wsup.struts2.interceptor.LoggingInterceptor">
+				<param name="secureParams">password,passwd</param>
+			</interceptor>
+			<interceptor name="redirectMessage"
+				class="net.sourceforge.wsup.struts2.interceptor.RedirectMessageInterceptor" />
+			<interceptor name="trimParams"
+				class="net.sourceforge.wsup.struts2.interceptor.TrimParametersInterceptor">
+				<param name="excludeParams">desc</param>
+			</interceptor>
+
+			<interceptor-stack name="customStack">
+				<interceptor-ref name="log" />
+				<interceptor-ref name="redirectMessage" />
+				<interceptor-ref name="trimParams" />
+				<interceptor-ref name="defaultStack" />
+			</interceptor-stack>
+
+		</interceptors>
+
+		<default-interceptor-ref name="customStack" />
+		<default-action-ref name="Unknown" />
+
+		<action name="Unknown" class="net.sourceforge.wsup.struts2.UnknownAction">
+			<result>Unknown.jsp</result>
+		</action>
+
+		<action name="servererror"
+			class="net.sourceforge.wsup.struts2.result.TestHttpErrorResultAction">
+			<result name="success" type="httperror">
+				<param name="status">200</param>
+				<param name="errorMessage">OK</param>
+				<param name="headers.aaa">AAA</param>
+				<param name="headers['X-CUSTOM-A']">The Custom A value</param>
+				<param name="headers['X-CUSTOM-B']">The Custom B value</param>
+				<param name="parse">false</param>
+			</result>
+			<result name="error" type="httperror">
+				<param name="status">${status}</param>
+				<param name="errorMessage">${message}</param>
+				<param name="parse">true</param>
+			</result>
+		</action>
+
+		<action name="testTrim" class="net.sourceforge.wsup.struts2.interceptor.TestTrimAction">
+			<result>/struts2/TestTrim.jsp</result>
+		</action>
+
+		<action name="testLogging"
+			class="net.sourceforge.wsup.struts2.interceptor.TestLoggingInterceptorAction">
+			<result>/struts2/TestLogging.jsp</result>
+		</action>
+
+		<action name="testRedirectActionBefore"
+			class="net.sourceforge.wsup.struts2.interceptor.TestRedirectMessageInterceptorAction"
+			method="doBefore">
+			<result type="redirectAction">testRedirectActionAfter</result>
+		</action>
+
+		<action name="testRedirectActionAfter"
+			class="net.sourceforge.wsup.struts2.interceptor.TestRedirectMessageInterceptorAction"
+			method="doAfter">
+			<result name="input">/struts2/TestRedirect.jsp</result>
+		</action>
+
+		<action name="testRedirectBefore"
+			class="net.sourceforge.wsup.struts2.interceptor.TestRedirectMessageInterceptorAction"
+			method="doBefore">
+			<result type="redirect">testRedirectAfter.action</result>
+		</action>
+
+		<action name="testRedirectAfter"
+			class="net.sourceforge.wsup.struts2.interceptor.TestRedirectMessageInterceptorAction"
+			method="doAfter">
+			<result name="input">/struts2/TestRedirect.jsp</result>
+		</action>
+
+	</package>
+</struts>

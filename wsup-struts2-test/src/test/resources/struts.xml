@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+
+  <package name="struts2-test-testing" extends="struts-default"
+    namespace="/struts2-test-testing">
+    <default-interceptor-ref name="defaultStack" />
+
+    <action name="test1" class="net.sourceforge.wsup.struts2.test.Test1Action">
+      <result>/struts2/Test1.jsp</result>
+    </action>
+
+    <action name="test2" class="net.sourceforge.wsup.struts2.test.Test2Action">
+      <result name="session">/struts2/Test2.jsp</result>
+    </action>
+
+    <action name="test3" class="net.sourceforge.wsup.struts2.test.Test3Action">
+      <result>/struts2/Test3.jsp</result>
+    </action>
+
+    <action name="test4" class="net.sourceforge.wsup.struts2.test.Test4Action">
+      <result>/struts2/Test4.jsp</result>
+    </action>
+
+  </package>
+
+</struts>
